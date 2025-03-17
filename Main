@@ -1,6 +1,8 @@
 {
-    "SoftwareVersion": "1.0",
+    "SoftwareVersion": "1.1b",
     "SoftwareUrl":"https://cdn.discordapp.com/attachments/1350860118086127710/1351265075809222718/zeroxploit.zip?ex=67d9bf2b&is=67d86dab&hm=8cd66fd3ec0ce2c97ec3b1040ff20693e32cf4a70630f682b09b52d22d59ac52&",
     "Status":"True",
-    "Changelog":"[+] added free vbucks tab "
+    "Changelog":"[ + ]:  Added tabs system
+[ + ]:  Added autosave (automatically saves the stuff your scripts and tabs)
+[ ! ]:  Lines may have issues"
 }
