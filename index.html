@@ -1,296 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web UI</title>
+    <title>IP Lookup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --primary-color: #ff3e3e;
-            --secondary-color: #ff8f00;
-            --dark-color: #1e1e2e;
-            --light-color: #f8f8f2;
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-image: url('https://images2.alphacoders.com/941/thumb-1920-941898.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--dark-color), #2d2d44);
-            color: var(--light-color);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        #lookupButton {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s;
+        }
+        
+        #lookupButton:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            background-color: #65a30d;
+        }
+        
+        #results {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        #results.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        #error {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        #error.show {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .container {
-            width: 90%;
-            max-width: 900px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border-radius: 12px;
-            overflow: hidden;
-            background-color: #282a36;
-            transform: translateY(0);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-        }
-        
-        .editor-header {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 1rem;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 75%;
+            max-width: 2xl;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
         }
         
-        .editor-header h2 {
-            margin: 0;
-            font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        input {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f9fafb;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1.2rem;
+            padding: 0.75rem;
+            border-color: #86ef7d;
+            animation: blink-cursor 1s steps(5, end) infinite;
+            width: 80%;
+            max-width: 600px;
         }
         
-        .editor-wrapper {
-            display: flex;
-            position: relative;
-            height: 400px;
-        }
-        
-        .line-numbers {
-            width: 50px;
-            background-color: #21222c;
-            padding: 10px 0;
-            text-align: right;
-            overflow-y: hidden;
-            user-select: none;
-        }
-        
-        .line-numbers div {
-            padding: 0 10px;
-            color: #6272a4;
-            font-family: monospace;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        #code-editor {
-            flex-grow: 1;
-            border: none;
-            background-color: #282a36;
-            color: #f8f8f2;
-            font-family: monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            padding: 10px;
-            resize: none;
+        input:focus {
             outline: none;
-            tab-size: 4;
+            border-color: #86ef7d;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            animation: none;
         }
         
-        .button-container {
-            display: flex;
-            gap: 10px;
-            padding: 15px;
-            background-color: #21222c;
+        @keyframes blink-cursor {
+            from,
+            to {
+                border-right-color: rgba(255, 255, 255, 0);
+            }
+            50% {
+                border-right-color: #f9fafb;
+            }
         }
         
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            font-size: 16px;
+        .discord-button {
+            background-color: #65a30d;
             color: white;
-            z-index: 1;
+            padding: 0.9rem 1.8rem;
+            border-radius: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            width: auto;
+            text-align: center;
+            font-size: 1.3rem;
         }
         
-        .btn:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            transition: height 0.3s ease;
-            z-index: -1;
+        .discord-button:hover {
+            background-color: #a855f7;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            animation: none;
         }
         
-        .btn:hover:after {
-            height: 100%;
+        .discord-button:focus {
+            animation: none;
         }
         
-        .btn:active {
-            transform: scale(0.95);
+        .discord-icon {
+            width: 1.8rem;
+            height: 1.8rem;
+            background-image: url('https://cdn.discordapp.com/attachments/1197114118774876210/1201101747975278672/discord-logo-white.png?ex=65c65787&is=65b3e287&hm=5575c9521588824a518e88946f818544971c944117797787884d85288f7a9561&');
+            background-size: contain;
+            background-repeat: no-repeat;
         }
         
-        .execute-btn {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            box-shadow: 0 4px 15px rgba(255, 62, 62, 0.4);
+        .mb-4 {
+            margin-bottom: 1rem;
+            text-align: center;
         }
         
-        .clear-btn {
-            background: linear-gradient(45deg, #6272a4, #44475a);
-            box-shadow: 0 4px 15px rgba(98, 114, 164, 0.4);
+        .block {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #d1d5db;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
         }
         
-        .output {
-            background-color: #282a36;
-            border-top: 2px solid #44475a;
-            padding: 15px;
-            min-height: 100px;
-            max-height: 200px;
-            overflow-y: auto;
-            color: #f8f8f2;
-            font-family: monospace;
+        .space-x-2 {
+            margin-top: 0.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        #results {
+            background-color: #1e1e1e;
         }
         
-        .pulse {
-            animation: pulse 0.5s ease;
+        #made-by {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 2rem;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 8px rgba(134, 239, 129, 0.7);
+            animation: fadeIn 3s ease, pulse 2s infinite alternate;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
         
-        .fade-in {
-            animation: fadeIn 0.5s ease forwards;
+        @keyframes pulse {
+            from {
+                transform: scale(0.9);
+                color: #b1f7b9;
+            }
+            to {
+                transform: scale(1);
+                color: #86ef7d;
+            }
         }
     </style>
 </head>
-<body>
+
+
+<body class="bg-gray-900 text-gray-100">
     <div class="container">
-        <div class="editor-header">
-            <h2>Web Executor</h2>
+        <h1 class="text-3xl font-semibold mb-6 text-center text-green-200 animate-pulse">IP Information Lookup</h1>
+        <div class="mb-4">
+            <label for="ipInput" class="block text-green-300">Enter IP Address:</label>
+            <div class="space-x-2">
+                <input type="text" id="ipInput" placeholder="Enter IP Address" class="w-full focus:ring-green-500 focus:border-green-500 text-black text-lg p-3">
+                <button id="lookupButton" class="bg-green-600 hover:bg-green-800 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-md text-lg">Lookup</button>
+            </div>
         </div>
-        <div class="editor-wrapper">
-            <div class="line-numbers" id="line-numbers"></div>
-            <textarea id="code-editor" spellcheck="false" placeholder="Write your code here..."></textarea>
+        <div id="results" class="hidden mt-6 text-white">
+            <h2 class="text-xl font-semibold mb-4 text-green-200">Results:</h2>
+            <div class="shadow-md rounded-lg p-4 border border-gray-700 bg-white text-black">
+                <p id="ip" class="text-gray-700"><span class="font-semibold text-green-600">IP Address:</span> </p>
+                <p id="country" class="text-gray-700"><span class="font-semibold text-green-600">Country:</span> </p>
+                <p id="city" class="text-gray-700"><span class="font-semibold text-green-600">City:</span> </p>
+                <p id="latitude" class="text-gray-700"><span class="font-semibold text-green-600">Latitude:</span> </p>
+                <p id="longitude" class="text-gray-700"><span class="font-semibold text-green-600">Longitude:</span> </p>
+                <p id="isp" class="text-gray-700"><span class="font-semibold text-green-600">ISP:</span> </p>
+            </div>
         </div>
-        <div class="button-container">
-            <button class="btn execute-btn" id="execute-btn">Execute</button>
-            <button class="btn clear-btn" id="clear-btn">Clear</button>
+        <div id="error" class="hidden mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Error:</strong>
+            <span class="block sm:inline" id="errorMessage"></span>
         </div>
-        <div class="output" id="output"></div>
+        <p id="made-by">Made with ❤️ by xp</p>
     </div>
-
     <script>
-        const codeEditor = document.getElementById('code-editor');
-        const lineNumbers = document.getElementById('line-numbers');
-        const executeBtn = document.getElementById('execute-btn');
-        const clearBtn = document.getElementById('clear-btn');
-        const output = document.getElementById('output');
-
-        function updateLineNumbers() {
-            const lines = codeEditor.value.split('\n');
-            lineNumbers.innerHTML = '';
-            
-            for (let i = 0; i < lines.length; i++) {
-                const lineNumber = document.createElement('div');
-                lineNumber.textContent = i + 1;
-                lineNumbers.appendChild(lineNumber);
+        document.getElementById('lookupButton').addEventListener('click', function() {
+            const ipAddress = document.getElementById('ipInput').value;
+            const resultsDiv = document.getElementById('results');
+            const errorDiv = document.getElementById('error');
+            const errorMessageSpan = document.getElementById('errorMessage');
+            // Basic IP address validation
+            const ipRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
+            if (!ipRegex.test(ipAddress)) {
+                errorMessageSpan.textContent = "Invalid IP address format. Please enter a valid IPv4 address.";
+                errorDiv.classList.remove('hidden');
+                errorDiv.classList.add('show');
+                resultsDiv.classList.add('hidden');
+                resultsDiv.classList.remove('show');
+                return;
             }
-            
-            if (lines[lines.length - 1].length > 0 || lines.length === 0) {
-                const lineNumber = document.createElement('div');
-                lineNumber.textContent = lines.length + 1;
-                lineNumbers.appendChild(lineNumber);
-            }
-        }
-
-        updateLineNumbers();
-
-        codeEditor.addEventListener('input', updateLineNumbers);
-        
-        codeEditor.addEventListener('scroll', () => {
-            lineNumbers.scrollTop = codeEditor.scrollTop;
-        });
-
-        executeBtn.addEventListener('click', () => {
-            executeBtn.classList.add('pulse');
-            setTimeout(() => executeBtn.classList.remove('pulse'), 500);
-            
-            output.innerHTML = '';
-            output.classList.remove('fade-in');
-            
-            try {
-                const code = codeEditor.value;
-                
-                const originalConsoleLog = console.log;
-                const logs = [];
-                
-                console.log = function(...args) {
-                    logs.push(args.map(arg => 
-                        typeof arg === 'object' ? JSON.stringify(arg) : arg
-                    ).join(' '));
-                    originalConsoleLog.apply(console, args);
-                };
-                
-                const result = new Function(code)();
-                
-                console.log = originalConsoleLog;
-                
-                if (logs.length > 0) {
-                    logs.forEach(log => {
-                        const logElement = document.createElement('div');
-                        logElement.textContent = log;
-                        output.appendChild(logElement);
-                    });
-                }
-                
-                if (result !== undefined) {
-                    const resultElement = document.createElement('div');
-                    resultElement.innerHTML = `<strong>Result:</strong> ${result}`;
-                    output.appendChild(resultElement);
-                }
-                
-            } catch (error) {
-                const errorElement = document.createElement('div');
-                errorElement.style.color = '#ff5555';
-                errorElement.textContent = `Error: ${error.message}`;
-                output.appendChild(errorElement);
-            }
-            
-            output.classList.add('fade-in');
-        });
-
-        clearBtn.addEventListener('click', () => {
-            clearBtn.classList.add('pulse');
-            setTimeout(() => clearBtn.classList.remove('pulse'), 500);
-            
-            codeEditor.value = '';
-            output.innerHTML = '';
-            updateLineNumbers();
-        });
-
-        codeEditor.addEventListener('keydown', function(e) {
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
-                
-                this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
-                this.selectionStart = this.selectionEnd = start + 4;
-                updateLineNumbers();
-            }
+            errorDiv.classList.add('hidden');
+            errorDiv.classList.remove('show');
+            // Using whatismyipaddress.com's API (no API key required, but might have rate limits)
+            const apiUrl = `https://whatismyipaddress.com/lookup-json/${ipAddress}`;
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        errorMessageSpan.textContent = `API Error: ${data.error}`;
+                        errorDiv.classList.remove('hidden');
+                        errorDiv.classList.add('show');
+                        resultsDiv.classList.add('hidden');
+                        resultsDiv.classList.remove('show');
+                    } else {
+                        document.getElementById('ip').textContent = `IP Address: ${data.ip}`;
+                        document.getElementById('country').textContent = `Country: <span class="math-inline">\{data\.country\} \(</span>{data.country_code})`;
+                        document.getElementById('city').textContent = `City: ${data.city}`;
+                        document.getElementById('latitude').textContent = `Latitude: ${data.latitude}`;
+                        document.getElementById('longitude').textContent = `Longitude: ${data.longitude}`;
+                        document.getElementById('isp').textContent = `ISP: ${data.isp}`;
+                        resultsDiv.classList.remove('hidden');
+                        resultsDiv.classList.add('show');
+                        errorDiv.classList.add('hidden');
+                        errorDiv.classList.remove('show');
+                    }
+                })
+                .catch(error => {
+                    errorMessageSpan.textContent = `Error fetching data: ${error.message}`;
+                    errorDiv.classList.remove('hidden');
+                    errorDiv.classList.add('show');
+                    resultsDiv.classList.add('hidden');
+                    resultsDiv.classList.remove('show');
+                });
         });
     </script>
 </body>
+
+
 </html>
