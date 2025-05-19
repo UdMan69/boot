@@ -136,4 +136,35 @@
 </head>
 <body>
     <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1;">
-        <img sr
+        <img src="https://media.discordapp.net/attachments/972533899462836334/1213645066237771796/933D3E06-4D91-42CD-BCFC-64D416FC5734.gif?ex=682c764c&is=682b24cc&hm=5dfce050428e52b20fe20afc1b3b131b32b933c6b16441abf04cd99ca05c509d&=" style="width: 100%; height: 100%; object-fit: cover;" />
+    </div>
+
+    <div class="container">
+        <div class="profile-pic">
+            <img src="https://images-ext-1.discordapp.net/external/RRJ3Hshv2PK4jxxIcJ_in4L2CeEt3p5g_gCnwGZHwRY/%3Fsize%3D4096/https/cdn.discordapp.com/avatars/249232950825058305/a_0dede3db3afacab9661bf9b2d86e5794.gif" alt="Your Profile Picture">
+        </div>
+        <div class="changing-text" id="changingText"></div>
+        <div class="skills-text">
+            c++, c#, html, css, javascript
+        </div>
+        <div class="links-container">
+            <a href="sooooooon" target="_blank" class="link-button">Xp Cheats</a>
+            <a href="https://discord.com/user/1371956718397030400" target="_blank" class="link-button">Discord</a>
+        </div>
+    </div>
+
+    <script>
+        const changingTextElement = document.getElementById('changingText');
+        const phrases = ["Xp Is Ud ?", "13 and I code better than you","Xp cheats coming soon"];
+        let index = 0;
+
+        function updateText() {
+            changingTextElement.textContent = phrases[index];
+            index = (index + 1) % phrases.length;
+        }
+
+        updateText();
+        setInterval(updateText, 3000);
+    </script>
+</body>
+</html>
